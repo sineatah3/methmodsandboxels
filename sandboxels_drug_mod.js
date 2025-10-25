@@ -1,6 +1,6 @@
 runAfterLoad(function() {
-// === Sandboxels — Safe Abstract Crafting Mod (v1.0) ===
-// PURPOSE: Allow in-game "crafting" of named elements using fictional reagents and equipment.
+// === Sandboxels — Safe Abstract Crafting Mod (Extended Drugs v1.1) ===
+// PURPOSE: Adds a comprehensive set of fictional drugs and their synthesis pathways for research and experimentation.
 // THIS FILE CONTAINS NO REAL-WORLD SYNTHESIS, NO REAL PRECURSORS, AND NO ACTIONABLE INSTRUCTIONS.
 
 // -------------------- Helper factories --------------------
@@ -49,121 +49,89 @@ function addSimpleSolid(id,name,color,category="drugs",density=800){
     elements[id].reactions = elements[id].reactions || {};
 }
 
-// -------------------- Fictional reagents & equipment --------------------
-// Generic fictional reagents (unique sets per product to avoid implication of real chemistry)
-addSimplePowder("reagent_m_a","Reagent M‑A","#cfe6ff","fictional_reagents",960);
-addSimpleLiquid("solvent_m_q","Solvent M‑Q","#c8f0ff","fictional_reagents",1020);
-addSimplePowder("catalyst_m_z","Catalyst M‑Z","#ffdca8","fictional_reagents",1200);
+// -------------------- Fictional reagents --------------------
+addSimplePowder("reagent_fent_a","Reagent F-A","#ffe6e6","fictional_reagents",1020);
+addSimpleLiquid("solvent_fent_q","Solvent F-Q","#ffcccc","fictional_reagents",1030);
 
-addSimplePowder("reagent_c_a","Reagent C‑A","#efe8d8","fictional_reagents",980);
-addSimpleLiquid("solvent_c_q","Solvent C‑Q","#f7f0e8","fictional_reagents",1005);
+addSimplePowder("reagent_amp_a","Reagent Amp-A","#e6ffe6","fictional_reagents",1000);
+addSimpleLiquid("solvent_amp_q","Solvent Amp-Q","#ccffcc","fictional_reagents",1010);
 
-addSimplePowder("reagent_h_a","Reagent H‑A","#efe0d6","fictional_reagents",990);
-addSimplePowder("reagent_h_b","Reagent H‑B","#f2e8e0","fictional_reagents",980);
-addSimpleLiquid("solvent_h_q","Solvent H‑Q","#f0e6f0","fictional_reagents",1030);
+addSimplePowder("reagent_benz_a","Reagent Benz-A","#e6e6ff","fictional_reagents",980);
+addSimpleLiquid("solvent_benz_q","Solvent Benz-Q","#ccccff","fictional_reagents",1000);
 
-addSimplePowder("reagent_x_a","Reagent X‑A","#fbeef8","fictional_reagents",1005);
-addSimpleLiquid("solvent_x_q","Solvent X‑Q","#ffdfff","fictional_reagents",1040);
+addSimplePowder("reagent_methadone_a","Reagent Methadone-A","#ffe6cc","fictional_reagents",1010);
+addSimpleLiquid("solvent_methadone_q","Solvent Methadone-Q","#ffd9b3","fictional_reagents",1025);
 
-// Lab equipment (place these blocks to enable transformations)
+// -------------------- Lab equipment --------------------
 addSimpleSolid("mixer","Mixer (Equipment)","#9aa9b0","lab",3000);
 addSimpleSolid("heater","Heater (Equipment)","#b04a2b","lab",3500);
 addSimpleSolid("dry_box","Dry Box (Equipment)","#6f6f6f","lab",3000);
 addSimpleSolid("filter_unit","Filter Unit (Equipment)","#9a7f6f","lab",3000);
 
 // -------------------- Intermediate process elements --------------------
-addSimplePowder("mix_meth","Mix: Crystal‑type","#dfeffb","process_intermediates",1100);
-addSimpleLiquid("solution_meth","Solution: Crystal‑type","#eaf6ff","process_intermediates",1030);
-addSimplePowder("crystals_meth","Crystalline Mass (wet)","#f7fbff","process_intermediates",1120);
+addSimplePowder("mix_fent","Mix: Light Pink","#ffd9d9","process_intermediates",1100);
+addSimpleLiquid("solution_fent","Solution: Pink","#ffb3b3","process_intermediates",1035);
+addSimplePowder("crystals_fent","Crystalline Mass (wet)","#ff9999","process_intermediates",1120);
 
-addSimplePowder("mix_coke","Mix: White Paste","#f3efe0","process_intermediates",1100);
-addSimpleLiquid("solution_coke","Solution: White","#fefbf2","process_intermediates",1035);
-addSimplePowder("crystals_coke","Cake Mass (wet)","#fff7e6","process_intermediates",1120);
+addSimplePowder("mix_amp","Mix: Greenish","#d9ffd9","process_intermediates",1100);
+addSimpleLiquid("solution_amp","Solution: Green","#b3ffb3","process_intermediates",1035);
+addSimplePowder("crystals_amp","Crystalline Mass (wet)","#99ff99","process_intermediates",1120);
 
-addSimplePowder("mix_her","Mix: Tannish","#efe0d6","process_intermediates",1100);
-addSimpleLiquid("solution_her","Solution: Tan","#f7efe6","process_intermediates",1040);
-addSimplePowder("crystals_her","Tannish Mass (wet)","#efe6dd","process_intermediates",1120);
+addSimplePowder("mix_benz","Mix: Light Blue","#d9d9ff","process_intermediates",1100);
+addSimpleLiquid("solution_benz","Solution: Blue","#b3b3ff","process_intermediates",1035);
+addSimplePowder("crystals_benz","Crystalline Mass (wet)","#9999ff","process_intermediates",1120);
 
-addSimplePowder("mix_mdma","Mix: Pinkish","#fbeef8","process_intermediates",1100);
-addSimpleLiquid("solution_mdma","Solution: Pink","#fff0f6","process_intermediates",1040);
-addSimplePowder("crystals_mdma","Pink Mass (wet)","#ffeef9","process_intermediates",1120);
+addSimplePowder("mix_methadone","Mix: Light Orange","#ffe6cc","process_intermediates",1100);
+addSimpleLiquid("solution_methadone","Solution: Orange","#ffd9b3","process_intermediates",1035);
+addSimplePowder("crystals_methadone","Crystalline Mass (wet)","#ffc799","process_intermediates",1120);
 
-// -------------------- Final presentational products (named as requested) --------------------
-addSimplePowder("methamphetamine","Methamphetamine","#f7f7ff","drugs",990);
-addSimplePowder("cocaine","Cocaine","#fffbe8","drugs",1000);
-addSimplePowder("heroin","Heroin","#dbcbb3","drugs",1000);
-addSimplePowder("mdma","MDMA","#faf7ff","drugs",1050);
-addSimpleLiquid("lsd","LSD (Presentational)","#c8f7ff","drugs",1100);
-addSimpleSolid("cannabis","Cannabis","#7cc77e","drugs",600);
-addSimpleSolid("psilocybin_mushroom","Psilocybin Mushroom","#b8b0b9","drugs",300);
+// -------------------- Final presentational products --------------------
+addSimplePowder("fentanyl","Fentanyl","#ff4d4d","drugs",1020);
+addSimplePowder("amphetamine","Amphetamine","#33cc33","drugs",1000);
+addSimplePowder("benzodiazepine","Benzodiazepine","#4d4dff","drugs",990);
+addSimplePowder("methadone","Methadone","#ff944d","drugs",1015);
 
 // -------------------- Safe abstract process rules --------------------
-/*
-Workflow pattern (abstract, fictional):
-1) Place the required fictional reagents adjacent to a Mixer.
-   - reagents + mixer -> mix (low chance).
-2) Optionally place Mixer near Heater to convert mix -> solution (very low chance).
-3) Place solution near Filter Unit and Dry Box (or Heater+DryBox) to convert -> wet crystalline mass.
-4) Place wet crystalline mass inside Dry Box (or near heater + dry box) to convert -> final presentational product.
-All conversions use fictional reagents and small chances to avoid runaway conversions.
-*/
+// Step 1: reagents -> mixes (adjacent to mixer)
+elements.reagent_fent_a.reactions["mixer"] = { elem2: "mix_fent", chance: 0.08 };
+elements.solvent_fent_q.reactions["mixer"] = { elem2: "mix_fent", chance: 0.06 };
 
-// Step 1: reagents -> mixes (triggered when adjacent to mixer)
-elements.reagent_m_a.reactions["mixer"] = { elem2: "mix_meth", chance: 0.08 };
-elements.solvent_m_q.reactions["mixer"] = { elem2: "mix_meth", chance: 0.06 };
-elements.catalyst_m_z.reactions["mixer"] = { elem2: "mix_meth", chance: 0.04 };
+elements.reagent_amp_a.reactions["mixer"] = { elem2: "mix_amp", chance: 0.08 };
+elements.solvent_amp_q.reactions["mixer"] = { elem2: "mix_amp", chance: 0.06 };
 
-elements.reagent_c_a.reactions["mixer"] = { elem2: "mix_coke", chance: 0.08 };
-elements.solvent_c_q.reactions["mixer"] = { elem2: "mix_coke", chance: 0.06 };
+elements.reagent_benz_a.reactions["mixer"] = { elem2: "mix_benz", chance: 0.08 };
+elements.solvent_benz_q.reactions["mixer"] = { elem2: "mix_benz", chance: 0.06 };
 
-elements.reagent_h_a.reactions["mixer"] = { elem2: "mix_her", chance: 0.07 };
-elements.reagent_h_b.reactions["mixer"] = { elem2: "mix_her", chance: 0.05 };
-elements.solvent_h_q.reactions["mixer"] = { elem2: "mix_her", chance: 0.04 };
+elements.reagent_methadone_a.reactions["mixer"] = { elem2: "mix_methadone", chance: 0.08 };
+elements.solvent_methadone_q.reactions["mixer"] = { elem2: "mix_methadone", chance: 0.06 };
 
-elements.reagent_x_a.reactions["mixer"] = { elem2: "mix_mdma", chance: 0.07 };
-elements.solvent_x_q.reactions["mixer"] = { elem2: "mix_mdma", chance: 0.05 };
+// Step 2: mixes -> solutions (heater)
+elements.mix_fent.reactions["heater"] = { elem2: "solution_fent", chance: 0.03 };
+elements.mix_amp.reactions["heater"] = { elem2: "solution_amp", chance: 0.03 };
+elements.mix_benz.reactions["heater"] = { elem2: "solution_benz", chance: 0.03 };
+elements.mix_methadone.reactions["heater"] = { elem2: "solution_methadone", chance: 0.03 };
 
-// Step 2: mixes -> solutions when heater present (low chance)
-elements.mix_meth.reactions["heater"] = { elem2: "solution_meth", chance: 0.03 };
-elements.mix_coke.reactions["heater"] = { elem2: "solution_coke", chance: 0.03 };
-elements.mix_her.reactions["heater"] = { elem2: "solution_her", chance: 0.03 };
-elements.mix_mdma.reactions["heater"] = { elem2: "solution_mdma", chance: 0.03 };
+// Step 3: solutions -> wet crystals (filter_unit or heater+dry_box)
+elements.solution_fent.reactions["filter_unit"] = { elem2: "crystals_fent", chance: 0.04 };
+elements.solution_amp.reactions["filter_unit"] = { elem2: "crystals_amp", chance: 0.04 };
+elements.solution_benz.reactions["filter_unit"] = { elem2: "crystals_benz", chance: 0.04 };
+elements.solution_methadone.reactions["filter_unit"] = { elem2: "crystals_methadone", chance: 0.04 };
 
-// Step 3: solutions -> wet crystals when near filter_unit or when heated near dry_box
-elements.solution_meth.reactions["filter_unit"] = { elem2: "crystals_meth", chance: 0.04 };
-elements.solution_coke.reactions["filter_unit"] = { elem2: "crystals_coke", chance: 0.04 };
-elements.solution_her.reactions["filter_unit"] = { elem2: "crystals_her", chance: 0.04 };
-elements.solution_mdma.reactions["filter_unit"] = { elem2: "crystals_mdma", chance: 0.04 };
+elements.solution_fent.reactions["heater"] = { elem2: "crystals_fent", chance: 0.01 };
+elements.solution_amp.reactions["heater"] = { elem2: "crystals_amp", chance: 0.01 };
+elements.solution_benz.reactions["heater"] = { elem2: "crystals_benz", chance: 0.01 };
+elements.solution_methadone.reactions["heater"] = { elem2: "crystals_methadone", chance: 0.01 };
 
-elements.solution_meth.reactions["heater"] = { elem2: "crystals_meth", chance: 0.01 };
-elements.solution_coke.reactions["heater"] = { elem2: "crystals_coke", chance: 0.01 };
-elements.solution_her.reactions["heater"] = { elem2: "crystals_her", chance: 0.01 };
-elements.solution_mdma.reactions["heater"] = { elem2: "crystals_mdma", chance: 0.01 };
+// Step 4: wet crystals -> final product (dry_box or heater+dry_box)
+elements.crystals_fent.reactions["dry_box"] = { elem2: "fentanyl", chance: 0.02 };
+elements.crystals_amp.reactions["dry_box"] = { elem2: "amphetamine", chance: 0.02 };
+elements.crystals_benz.reactions["dry_box"] = { elem2: "benzodiazepine", chance: 0.02 };
+elements.crystals_methadone.reactions["dry_box"] = { elem2: "methadone", chance: 0.02 };
 
-// Step 4: wet crystals -> final product when near dry_box (low chance) or by heater+dry_box
-elements.crystals_meth.reactions["dry_box"] = { elem2: "methamphetamine", chance: 0.02 };
-elements.crystals_coke.reactions["dry_box"] = { elem2: "cocaine", chance: 0.02 };
-elements.crystals_her.reactions["dry_box"] = { elem2: "heroin", chance: 0.02 };
-elements.crystals_mdma.reactions["dry_box"] = { elem2: "mdma", chance: 0.02 };
-
-elements.crystals_meth.reactions["heater"] = { elem2: "methamphetamine", chance: 0.005 };
-elements.crystals_coke.reactions["heater"] = { elem2: "cocaine", chance: 0.005 };
-elements.crystals_her.reactions["heater"] = { elem2: "heroin", chance: 0.005 };
-elements.crystals_mdma.reactions["heater"] = { elem2: "mdma", chance: 0.005 };
-
-// -------------------- Safety / performance guardrails --------------------
-// - All chances are intentionally small to avoid mass simultaneous conversions.
-// - Final products have NO reactions that reverse into intermediates.
-// - Intermediates do not spawn infinite effects or heavy behavior strings.
-// - Keep brush sizes small when testing (single pixel or tiny brushes).
-
-// Helper: ensure no element accidentally has heavy behavior arrays
-Object.keys(elements).forEach(function(k){
-    if (elements[k] && Array.isArray(elements[k].behavior) && elements[k].behavior.length>4) {
-        // simplify if something large slipped in
-        elements[k].behavior = behaviors.POWDER;
-    }
-});
+elements.crystals_fent.reactions["heater"] = { elem2: "fentanyl", chance: 0.005 };
+elements.crystals_amp.reactions["heater"] = { elem2: "amphetamine", chance: 0.005 };
+elements.crystals_benz.reactions["heater"] = { elem2: "benzodiazepine", chance: 0.005 };
+elements.crystals_methadone.reactions["heater"] = { elem2: "methadone", chance: 0.005 };
 
 // -------------------- Categories for UI --------------------
 if (!window.modCategories) window.modCategories = {};
@@ -172,16 +140,5 @@ modCategories["lab"] = { name: "Lab Equipment", color: "#c9c9c9" };
 modCategories["process_intermediates"] = { name: "Process Mixes", color: "#e4d19c" };
 modCategories["drugs"] = { name: "Drugs (Presentational)", color: "#ae7cc7" };
 
-// -------------------- Quick usage notes (in‑game) --------------------
-/*
-To experiment:
-1) Place one Mixer block.
-2) Place the fictional reagents (e.g., Reagent M‑A, Solvent M‑Q, Catalyst M‑Z) adjacent to the Mixer.
-   - Wait a bit for small-chance conversions to produce the "mix_meth" intermediate.
-3) Place a Heater nearby (or on the Mixer) to convert mix -> solution (rare).
-4) Place a Filter Unit and Dry Box near the solution to produce wet crystals and then the final presentational product.
-5) Use small brush sizes; conversions are low-probability and designed to be gradual.
-
-This entire system uses fictional reagents and abstracted rules only and does not provide any real-world instructions.
-*/
+// -------------------- End of Extended Drugs Mod --------------------
 });
