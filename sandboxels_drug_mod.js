@@ -1,437 +1,173 @@
 runAfterLoad(function() {
-// === Sandboxels Drug Simulation Mod v1.12 ===
-// Educational/Research Purposes Only
+// === Sandboxels — Expanded Named-Drug Elements (Safe, Non-actionable) v1.0 ===
+// Adds many named elements for cosmetic/research-in-game use only.
+// NO real-world synthesis, NO precursor reactions, NO instructions.
 
-// --- Precursors and Intermediates ---
+const lightBurnReaction = { "fire": { elem2: "smoke", chance: 0.02 } };
 
-elements.pseudoephedrine = {
-    id: "pseudoephedrine",
-    name: "Pseudoephedrine",
-    color: "#c7e6fa",
-    behavior: behaviors.POWDER,
-    category: "precursors",
-    state: "solid",
-    density: 1200,
-};
+// Helper to quickly create a simple powder element safely
+function addPowder(id, name, color, density=1000) {
+    elements[id] = {
+        id: id,
+        name: name,
+        color: color,
+        behavior: behaviors.POWDER,
+        category: "drugs",
+        state: "solid",
+        density: density,
+        burn: 10,
+        burnTime: 20,
+        burnInto: ["smoke"],
+    };
+    elements[id].reactions = elements[id].reactions || {};
+    elements[id].reactions["fire"] = { elem2: "smoke", chance: 0.02 };
+}
 
-elements.red_phosphorus = {
-    id: "red_phosphorus",
-    name: "Red Phosphorus",
-    color: "#b22222",
-    behavior: behaviors.POWDER,
-    category: "precursors",
-    state: "solid",
-    density: 2200,
-};
+// Helper to create simple solid/plant
+function addSolid(id, name, color, density=700) {
+    elements[id] = {
+        id: id,
+        name: name,
+        color: color,
+        behavior: behaviors.SOLID,
+        category: "drugs",
+        state: "solid",
+        density: density,
+        burn: 8,
+        burnTime: 16,
+        burnInto: ["smoke"],
+    };
+    elements[id].reactions = elements[id].reactions || {};
+    elements[id].reactions["fire"] = { elem2: "smoke", chance: 0.02 };
+}
 
-elements.iodine = {
-    id: "iodine",
-    name: "Iodine",
-    color: "#6e3b6e",
-    behavior: behaviors.POWDER,
-    category: "precursors",
-    state: "solid",
-    density: 4930,
-};
+// Helper for liquids
+function addLiquid(id, name, color, density=1050) {
+    elements[id] = {
+        id: id,
+        name: name,
+        color: color,
+        behavior: behaviors.LIQUID,
+        category: "drugs",
+        state: "liquid",
+        density: density,
+    };
+    elements[id].reactions = elements[id].reactions || {};
+    // Liquids produce smoke when set on fire (low chance)
+    elements[id].reactions["fire"] = { elem2: "smoke", chance: 0.01 };
+}
 
-elements.hcl = {
-    id: "hcl",
-    name: "Hydrochloric Acid",
-    color: "#e0ffe0",
-    behavior: behaviors.LIQUID,
-    category: "liquids",
-    state: "liquid",
-    density: 1200,
-};
+// Helper for gases
+function addGas(id, name, color, density=1) {
+    elements[id] = {
+        id: id,
+        name: name,
+        color: color,
+        behavior: behaviors.GAS,
+        category: "drugs",
+        state: "gas",
+        density: density,
+    };
+}
 
-elements.safrole = {
-    id: "safrole",
-    name: "Safrole",
-    color: "#c2e67f",
-    behavior: behaviors.LIQUID,
-    category: "precursors",
-    state: "liquid",
-    density: 1050,
-};
+// --- Core named items (previous set, kept) ---
+addPowder("methamphetamine","Methamphetamine","#f7f7ff",990);
+addPowder("cocaine","Cocaine","#fffbe8",1000);
+addPowder("heroin","Heroin","#dbcbb3",1000);
+addLiquid("lsd","LSD","#c8f7ff",1100);
+addPowder("mdma","MDMA","#faf7ff",1050);
+addSolid("cannabis","Cannabis","#7cc77e",600);
+addSolid("psilocybin_mushroom","Psilocybin Mushroom","#b8b0b9",300);
 
-elements.mercury_aluminum = {
-    id: "mercury_aluminum",
-    name: "Mercury-Aluminum Amalgam",
-    color: "#c0c0c0",
-    behavior: behaviors.SOLID,
-    category: "precursors",
-    state: "solid",
-    density: 4000,
-};
+// --- Expanded list (many names) ---
+// Opioids and related
+addPowder("morphine","Morphine","#c9c9f0",1100);
+addPowder("codeine","Codeine","#dcd0ff",1050);
+addPowder("oxycodone","Oxycodone","#f0dcd6",1100);
+addPowder("hydrocodone","Hydrocodone","#e5d8d0",1100);
+addPowder("tramadol","Tramadol","#efe3c8",1040);
+addPowder("fentanyl","Fentanyl","#e6dfe6",1080);
+addPowder("methadone","Methadone","#d8e6f0",1080);
+addPowder("buprenorphine","Buprenorphine","#e8f0e0",1060);
+addSolid("opium","Opium","#c09b7c",950);
+addSolid("poppy","Poppy","#b58f75",650);
 
-elements.coca_leaf = {
-    id: "coca_leaf",
-    name: "Coca Leaf",
-    color: "#4a7c2c",
-    behavior: behaviors.SOLID,
-    category: "plants",
-    state: "solid",
-    density: 500,
-};
+// Stimulants / ADHD related
+addPowder("amphetamine","Amphetamine","#fff2d9",1020);
+addPowder("adderall","Adderall (Amp salts)","#fff4cc",1025);
+addPowder("methylphenidate","Methylphenidate","#ffeedd",1030);
+addPowder("caffeine","Caffeine","#f7f7d9",1200);
+addPowder("methcathinone","Methcathinone","#ffe6ea",1010);
+addPowder("mephedrone","Mephedrone","#ffe8f0",1015);
 
-elements.sulfuric_acid = {
-    id: "sulfuric_acid",
-    name: "Sulfuric Acid",
-    color: "#f5e8bc",
-    behavior: behaviors.LIQUID,
-    category: "liquids",
-    state: "liquid",
-    density: 1800,
-};
+// Empathogens / entactogens
+addPowder("mdma_alt","MDMA-Alt","#fff1f8",1040);
 
-elements.sodium_bicarbonate = {
-    id: "sodium_bicarbonate",
-    name: "Sodium Bicarbonate",
-    color: "#e0e0e0",
-    behavior: behaviors.POWDER,
-    category: "powders",
-    state: "solid",
-    density: 2200,
-};
+// Sedatives / benzodiazepines / hypnotics
+addPowder("alprazolam","Alprazolam (Xanax)","#e9e7ff",1050);
+addPowder("diazepam","Diazepam (Valium)","#dfe9ff",1050);
+addPowder("clonazepam","Clonazepam","#e6f0ff",1050);
+addPowder("flunitrazepam","Flunitrazepam (Rohypnol)","#f0eef6",1050);
+addPowder("barbiturate","Barbiturate","#e6dcd6",1060);
 
-elements.acetic_anhydride = {
-    id: "acetic_anhydride",
-    name: "Acetic Anhydride",
-    color: "#e5f5fa",
-    behavior: behaviors.LIQUID,
-    category: "liquids",
-    state: "liquid",
-    density: 1080,
-};
+// Dissociatives
+addPowder("ketamine","Ketamine","#dfe6ff",1060);
+addPowder("pcp","PCP (Phencyclidine)","#d5d7e6",1060);
 
-elements.morphine = {
-    id: "morphine",
-    name: "Morphine",
-    color: "#c9c9f0",
-    behavior: behaviors.POWDER,
-    category: "precursors",
-    state: "solid",
-    density: 1100,
-};
+// Hallucinogens / plant-derived
+addPowder("dmt","DMT","#f0f0ff",1020);
+addLiquid("ayahuasca","Ayahuasca","#7fb7d6",1060);
+addSolid("peyote","Peyote","#c0d7b0",700);
+addSolid("salvia","Salvia","#b7e6c8",600);
+addSolid("kratom","Kratom","#5fa86a",650);
 
-elements.ergot = {
-    id: "ergot",
-    name: "Ergot",
-    color: "#2f194b",
-    behavior: behaviors.SOLID,
-    category: "fungi",
-    state: "solid",
-    density: 1000,
-};
+// Synthetic cannabinoids & new psychoactives (named, non-instructive)
+addPowder("spice","Spice (Synthetic Cannabinoid)","#d9c8ff",980);
+addPowder("bath_salts","Bath Salts","#fff0e6",1005);
 
-elements.diethylamine = {
-    id: "diethylamine",
-    name: "Diethylamine",
-    color: "#d1f5c4",
-    behavior: behaviors.LIQUID,
-    category: "liquids",
-    state: "liquid",
-    density: 707,
-};
+// Inhalants & gases
+addGas("nitrous_oxide","Nitrous Oxide","#e8f4ff",1);
+addLiquid("ethanol","Ethanol (Alcohol)","#f3e6ff",789);
+addSolid("tobacco","Tobacco","#7a5b3a",500);
+addPowder("nicotine","Nicotine","#e9e0c8",1150);
 
-elements.cannabis_plant = {
-    id: "cannabis_plant",
-    name: "Cannabis Plant",
-    color: "#3d7040",
-    behavior: behaviors.SOLID,
-    category: "plants",
-    state: "solid",
-    density: 700,
-};
+// Club/other drugs
+addPowder("benzylpiperazine","Benzylpiperazine","#f0e8f0",1010);
+addPowder("phenethylamine","Phenethylamine","#fff0f0",1010);
 
-elements.mushroom_spores = {
-    id: "mushroom_spores",
-    name: "Mushroom Spores",
-    color: "#e5e5d5",
-    behavior: behaviors.POWDER,
-    category: "fungi",
-    state: "solid",
-    density: 100,
-};
+// Designer/other names
+addPowder("velvet","Velvet","#e8d3c0",1005);        // cosmetic-only
+addPowder("snowflake","Snowflake","#fffdf0",1000);  // cosmetic-only
+addPowder("euphx","EuphX","#fff0f4",1030);         // cosmetic-only
+addPowder("stimlite","StimLite","#ffe9b3",990);     // cosmetic-only
+addSolid("kratom_leaf","Kratom Leaf","#6fa05a",650);
 
-elements.organic_matter = {
-    id: "organic_matter",
-    name: "Organic Matter",
-    color: "#5b3a1c",
-    behavior: behaviors.SOLID,
-    category: "soil",
-    state: "solid",
-    density: 1200,
-};
+// Misc named substances (cosmetic)
+addPowder("tablet","Tablet (Cosmetic)","#ffccff",900);
+addLiquid("rub_ointment","Rub Ointment","#ffdce0",1020);
+addGas("aromatic_smoke","Aromatic Smoke","#cfcfcf",1);
 
-// --- Intermediates ---
+// --- Ensure no reactions point to real synthesis chains ---
+// Remove any reactions if they exist for safety
+Object.keys(elements).forEach(function(key){
+    if (elements[key] && elements[key].reactions) {
+        // Keep only trivial burn->smoke in a standardized form; otherwise clear.
+        const safeReactions = {};
+        if (elements[key].reactions["fire"]) {
+            safeReactions["fire"] = { elem2: "smoke", chance: 0.02 };
+        }
+        elements[key].reactions = safeReactions;
+    } else if (elements[key]) {
+        elements[key].reactions = elements[key].reactions || {};
+        // keep trivial burn->smoke for consistency if absent
+        elements[key].reactions["fire"] = { elem2: "smoke", chance: 0.02 };
+    }
+});
 
-elements.meth_intermediate = {
-    id: "meth_intermediate",
-    name: "Meth Intermediate",
-    color: "#b1d1c1",
-    behavior: behaviors.POWDER,
-    category: "intermediates",
-    state: "solid",
-    density: 1100,
-};
-
-elements.cocaine_paste = {
-    id: "cocaine_paste",
-    name: "Cocaine Paste",
-    color: "#cfcfac",
-    behavior: behaviors.PASTE,
-    category: "intermediates",
-    state: "solid",
-    density: 1100,
-};
-
-elements.heroin_intermediate = {
-    id: "heroin_intermediate",
-    name: "Heroin Intermediate",
-    color: "#e8e0d6",
-    behavior: behaviors.POWDER,
-    category: "intermediates",
-    state: "solid",
-    density: 1100,
-};
-
-elements.lsd_intermediate = {
-    id: "lsd_intermediate",
-    name: "LSD Intermediate",
-    color: "#c7f0e7",
-    behavior: behaviors.PASTE,
-    category: "intermediates",
-    state: "solid",
-    density: 1100,
-};
-
-elements.mdma_intermediate = {
-    id: "mdma_intermediate",
-    name: "MDMA Intermediate",
-    color: "#e5e0f7",
-    behavior: behaviors.POWDER,
-    category: "intermediates",
-    state: "solid",
-    density: 1100,
-};
-
-// --- Final Substances ---
-
-elements.methamphetamine = {
-    id: "methamphetamine",
-    name: "Methamphetamine",
-    color: "#f7f7ff",
-    behavior: [
-        "XX|CR:smoke,smoke,smoke|XX",
-        "CR:smoke,smoke,smoke|CH|CR:smoke,smoke,smoke",
-        "M2|M1|M2"
-    ],
-    category: "drugs",
-    state: "solid",
-    density: 990,
-    tempHigh: 170,
-    stateHigh: "methamphetamine_gas",
-    burn: 30,
-    burnTime: 40,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-elements.methamphetamine_gas = {
-    id: "methamphetamine_gas",
-    name: "Methamphetamine Gas",
-    color: "#e6f2ff",
-    behavior: behaviors.GAS,
-    category: "gases",
-    state: "gas",
-    density: 1,
-    tempLow: 169,
-    stateLow: "methamphetamine"
-};
-
-elements.cocaine = {
-    id: "cocaine",
-    name: "Cocaine",
-    color: "#fffbe8",
-    behavior: behaviors.POWDER,
-    category: "drugs",
-    state: "solid",
-    density: 1000,
-    burn: 20,
-    burnTime: 35,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-elements.heroin = {
-    id: "heroin",
-    name: "Heroin",
-    color: "#dbcbb3",
-    behavior: behaviors.POWDER,
-    category: "drugs",
-    state: "solid",
-    density: 1000,
-    burn: 20,
-    burnTime: 35,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-elements.lsd = {
-    id: "lsd",
-    name: "LSD",
-    color: "#c8f7ff",
-    behavior: behaviors.LIQUID,
-    category: "drugs",
-    state: "liquid",
-    density: 1100,
-    tempHigh: 90,
-    stateHigh: "lsd_gas",
-    burn: 10,
-    burnTime: 10,
-};
-
-elements.lsd_gas = {
-    id: "lsd_gas",
-    name: "LSD Gas",
-    color: "#d0f8ff",
-    behavior: behaviors.GAS,
-    category: "gases",
-    state: "gas",
-    density: 1,
-    tempLow: 89,
-    stateLow: "lsd"
-};
-
-elements.mdma = {
-    id: "mdma",
-    name: "MDMA",
-    color: "#faf7ff",
-    behavior: behaviors.POWDER,
-    category: "drugs",
-    state: "solid",
-    density: 1050,
-    burn: 15,
-    burnTime: 25,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-elements.cannabis = {
-    id: "cannabis",
-    name: "Cannabis",
-    color: "#7cc77e",
-    behavior: [
-        "XX|CR:smoke,smoke,smoke|XX",
-        "CR:smoke,smoke,smoke|CH|CR:smoke,smoke,smoke",
-        "M2|M1|M2"
-    ],
-    category: "drugs",
-    state: "solid",
-    density: 600,
-    burn: 15,
-    burnTime: 20,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-elements.psilocybin_mushroom = {
-    id: "psilocybin_mushroom",
-    name: "Psilocybin Mushroom",
-    color: "#b8b0b9",
-    behavior: behaviors.SOLID,
-    category: "fungi",
-    state: "solid",
-    density: 300,
-    burn: 10,
-    burnTime: 15,
-    burnInto: ["smoke", "toxic_gas"],
-};
-
-
-// --- Reactions: Synthesis Processes ---
-
-// Methamphetamine: Pseudoephedrine + Red Phosphorus + Iodine + HCl + Heat
-elements.pseudoephedrine.reactions = {
-    "red_phosphorus": { elem2: "meth_intermediate", chance: 0.7 },
-    "iodine": { elem2: "meth_intermediate", chance: 0.7 }
-};
-elements.meth_intermediate.reactions = {
-    "hcl": { elem2: "methamphetamine", chance: 0.8 }
-};
-
-// Cocaine: Coca Leaf + Sulfuric Acid → Coca Paste + Sodium Bicarbonate + Heat → Cocaine
-elements.coca_leaf.reactions = {
-    "sulfuric_acid": { elem2: "cocaine_paste", chance: 0.7 }
-};
-elements.cocaine_paste.reactions = {
-    "sodium_bicarbonate": { elem2: "cocaine", chance: 0.7 }
-};
-
-// Heroin: Morphine + Acetic Anhydride + Heat → Heroin
-elements.morphine.reactions = {
-    "acetic_anhydride": { elem2: "heroin", chance: 0.7 }
-};
-
-// LSD: Ergot + Diethylamine + Acid → LSD Intermediate + Heat → LSD
-elements.ergot.reactions = {
-    "diethylamine": { elem2: "lsd_intermediate", chance: 0.6 }
-};
-elements.lsd_intermediate.reactions = {
-    "sulfuric_acid": { elem2: "lsd", chance: 0.6 }
-};
-
-// MDMA: Safrole + Acid + (Optional: Mercury-Aluminum) + Heat → MDMA Intermediate → MDMA
-elements.safrole.reactions = {
-    "hcl": { elem2: "mdma_intermediate", chance: 0.6 },
-    "mercury_aluminum": { elem2: "mdma_intermediate", chance: 0.7 }
-};
-elements.mdma_intermediate.reactions = {
-    "hcl": { elem2: "mdma", chance: 0.7 }
-};
-
-// Cannabis: Harvested as 'cannabis_plant', can be dried/heated to get 'cannabis'
-elements.cannabis_plant.tempHigh = 60;
-elements.cannabis_plant.stateHigh = "cannabis";
-
-// Psilocybin Mushrooms: Spores + Organic Matter + Time → Mushroom
-elements.mushroom_spores.reactions = {
-    "organic_matter": { elem2: "psilocybin_mushroom", chance: 0.4 }
-};
-
-// --- Optional: Toxic Gas Element ---
-
-elements.toxic_gas = {
-    id: "toxic_gas",
-    name: "Toxic Gas",
-    color: "#aaffff",
-    behavior: behaviors.GAS,
-    category: "gases",
-    state: "gas",
-    density: 1,
-};
-
-
-// --- Categories for the Elements ---
+// --- Categories for the UI ---
 if (!window.modCategories) window.modCategories = {};
-modCategories["drugs"] = {
-    name: "Drugs (Sim)",
-    color: "#ae7cc7"
-};
-modCategories["precursors"] = {
-    name: "Precursors",
-    color: "#9ad3c7"
-};
-modCategories["intermediates"] = {
-    name: "Intermediates",
-    color: "#e4d19c"
-};
-modCategories["fungi"] = {
-    name: "Fungi",
-    color: "#b48ed9"
-};
-modCategories["plants"] = {
-    name: "Plants",
-    color: "#7ea974"
-};
-modCategories["soil"] = {
-    name: "Soil/Organic",
-    color: "#7e6651"
-};
+modCategories["drugs"] = { name: "Drugs", color: "#ae7cc7" };
+
+// Small note: many of these names are included for in-game naming/visuals only.
+// No real-world guidance, production steps, or precursor chemistry is provided.
 });
