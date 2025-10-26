@@ -1532,40 +1532,94 @@
   }
 
   // --------------------------------------------------------------------------
-  // 13. KNIFE TOOL (like smash, shock, mix tools)
+  // 13. KNIFE TOOL - Add to toolbar (like heat, cool, move tools)
   // --------------------------------------------------------------------------
   
-  // Create knife element as a placeable tool
-  elements.knife = {
-    color: '#c0c0c0',
-    behavior: behaviors.WALL,
-    category: 'tools',
-    state: 'solid',
-    density: 7850,
-    hardness: 0.9,
-    conduct: 0.85,
-    tool: function(pixel) {
-      // When knife touches a plant, try to harvest it
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const x = pixel.x + dx;
-          const y = pixel.y + dy;
-          if (!isEmpty(x, y, true)) {
-            const neighbor = pixelMap[x][y];
-            const neighborElement = neighbor.element;
-            
-            if (elements[neighborElement].reactions && elements[neighborElement].reactions.knife) {
-              const reaction = elements[neighborElement].reactions.knife;
-              if (Math.random() < (reaction.chance || 0.2)) {
-                changePixel(neighbor, reaction.elem1);
-              }
-            }
+  // Add knife tool to the main tools array
+  if (typeof tools !== 'undefined' && Array.isArray(tools)) {
+    // Check if knife tool doesn't already exist
+    if (!tools.find(t => t.id === 'knife')) {
+      tools.push({
+        id: 'knife',
+        name: 'Knife',
+        description: 'Score plants to harvest materials',
+        cursor: 'crosshair',
+        category: 'special'
+      });
+    }
+  }
+
+  // Define knife tool behavior
+  if (typeof window !== 'undefined') {
+    window.knifeToolAction = function(x, y) {
+      if (!isEmpty(x, y, true)) {
+        const pixel = pixelMap[x][y];
+        const elementName = pixel.element;
+        
+        if (elements[elementName].reactions && elements[elementName].reactions.knife) {
+          const reaction = elements[elementName].reactions.knife;
+          if (Math.random() < (reaction.chance || 0.2)) {
+            changePixel(pixel, reaction.elem1);
           }
         }
       }
-    },
-    desc: 'Knife tool - Place next to plants to harvest. Scores poppies for opium latex, harvests coca leaves, cuts cannabis flowers'
-  };
+    };
+  }
+
+  // Hook into doTool function
+  if (typeof doTool !== 'undefined') {
+    const originalDoTool = doTool;
+    doTool = function(x, y) {
+      if (currentTool === 'knife') {
+        window.knifeToolAction(x, y);
+      } else {
+        originalDoTool(x, y);
+      }
+    };
+  }
+
+  // Alternative approach: Patch the tool system
+  if (typeof window !== 'undefined' && !window.knifeToolPatched) {
+    window.knifeToolPatched = true;
+    
+    // Wait for game to load then inject tool
+    setTimeout(() => {
+      if (typeof tools !== 'undefined') {
+        const knifeExists = tools.some(t => t && t.id === 'knife');
+        if (!knifeExists) {
+          tools.splice(4, 0, {
+            id: 'knife',
+            name: 'Knife',
+            icon: '🔪',
+            description: 'Score poppies for opium, harvest coca leaves, cut cannabis flowers',
+            cursor: 'crosshair'
+          });
+          console.log('✓ Knife tool added to toolbar');
+        }
+      }
+      
+      // Hook into the main game loop for knife tool
+      if (typeof pixelTicks !== 'undefined') {
+        const originalPixelTicks = pixelTicks;
+        pixelTicks = function(pixel) {
+          if (window.currentTool === 'knife' && mouseDown && pixel) {
+            const x = Math.floor(mousePos.x / pixelSize);
+            const y = Math.floor(mousePos.y / pixelSize);
+            
+            if (x === pixel.x && y === pixel.y) {
+              if (elements[pixel.element].reactions && elements[pixel.element].reactions.knife) {
+                const reaction = elements[pixel.element].reactions.knife;
+                if (Math.random() < (reaction.chance || 0.2)) {
+                  changePixel(pixel, reaction.elem1);
+                }
+              }
+            }
+          }
+          return originalPixelTicks(pixel);
+        };
+      }
+    }, 1000);
+  }
 
   // --------------------------------------------------------------------------
   // 14. PLANT EXTRACTION REACTIONS (for knife tool)
