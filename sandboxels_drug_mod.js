@@ -8,17 +8,8 @@
   'use strict';
 
   // --------------------------------------------------------------------------
-  // 0.  ON-LOAD DISCLAIMER
+  // 0.  ON-LOAD (disclaimer removed)
   // --------------------------------------------------------------------------
-  if (typeof window !== 'undefined') {
-    window.addEventListener('load', () => {
-      alert(
-        'CHEMRESEARCH_V2 ENHANCED – EDUCATIONAL MOD\n' +
-        'Simulates real-world chemistry including controlled substances.\n' +
-        'No real-world instructions are provided.  Use responsibly.'
-      );
-    });
-  }
 
   // --------------------------------------------------------------------------
   // 1.  HELPERS & BEHAVIORS
@@ -1532,28 +1523,26 @@
   }
 
   // --------------------------------------------------------------------------
-  // 13. KNIFE TOOL - Proper toolbar implementation
+  // 13. KNIFE TOOL - Cursor tool in lab equipment category
   // --------------------------------------------------------------------------
   
-  runAfterLoad(function() {
-    // Create the knife tool element with tool function
-    elements.knife_tool = {
-      color: "#c0c0c0",
-      tool: function(pixel) {
-        if (pixel && pixel.element) {
-          const el = elements[pixel.element];
-          if (el.reactions && el.reactions.knife) {
-            const reaction = el.reactions.knife;
-            if (Math.random() < (reaction.chance || 0.2)) {
-              changePixel(pixel, reaction.elem1);
-            }
+  elements.knife_tool = {
+    color: "#c0c0c0",
+    tool: function(pixel) {
+      if (pixel && pixel.element) {
+        const el = elements[pixel.element];
+        if (el.reactions && el.reactions.knife) {
+          const reaction = el.reactions.knife;
+          if (Math.random() < (reaction.chance || 0.2)) {
+            changePixel(pixel, reaction.elem1);
           }
         }
-      },
-      category: "tools",
-      hidden: true
-    };
-  });
+      }
+    },
+    category: "lab_equipment",
+    excludeRandom: true,
+    desc: "Knife tool - Click on plants to harvest materials. Score poppies for opium latex, harvest coca leaves, cut cannabis flowers"
+  };
 
   // --------------------------------------------------------------------------
   // 14. PLANT EXTRACTION REACTIONS (for knife tool)
@@ -1608,6 +1597,31 @@
   elements.cannabis_ruderalis.reactions.knife = {
     elem1: 'cannabis_flower',
     chance: 0.3
+  };
+
+  // Ephedra harvesting
+  if (!elements.ephedra_sinica.reactions) {
+    elements.ephedra_sinica.reactions = {};
+  }
+  elements.ephedra_sinica.reactions.knife = {
+    elem1: 'ephedra_leaves',
+    chance: 0.25
+  };
+
+  elements.ephedra_leaves = {
+    color: ['#827717', '#9e9d24'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 600,
+    tempHigh: 180,
+    stateHigh: 'ash',
+    burn: 65,
+    burnTime: 200,
+    reactions: {
+      water: { elem1: 'ephedrine', elem2: null, chance: 0.1, temp1: 80 }
+    },
+    desc: 'Ephedra leaves - contains ephedrine alkaloids'
   };
 
   // Kratom leaf harvesting
@@ -1695,6 +1709,79 @@
     tempHigh: 240,
     stateHigh: 'salvinorin_vapor',
     desc: 'Salvinorin A - most potent natural psychedelic'
+  };
+
+  // Iboga harvesting
+  if (!elements.iboga.reactions) {
+    elements.iboga.reactions = {};
+  }
+  elements.iboga.reactions.knife = {
+    elem1: 'iboga_bark',
+    chance: 0.2
+  };
+
+  elements.iboga_bark = {
+    color: ['#3e2723', '#4e342e'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 700,
+    tempHigh: 200,
+    stateHigh: 'ash',
+    burn: 60,
+    burnTime: 250,
+    reactions: {
+      ethanol: { elem1: 'ibogaine', elem2: null, chance: 0.15, temp1: 25 }
+    },
+    desc: 'Iboga root bark - contains ibogaine'
+  };
+
+  elements.ibogaine = {
+    color: ['#ffccbc', '#ffab91'],
+    behavior: PW,
+    category: 'research_compounds',
+    state: 'solid',
+    density: 1100,
+    tempHigh: 300,
+    stateHigh: 'smoke',
+    desc: 'Ibogaine - anti-addiction psychedelic (Schedule I)'
+  };
+
+  // Banisteriopsis caapi harvesting
+  if (!elements.banisteriopsis_caapi.reactions) {
+    elements.banisteriopsis_caapi.reactions = {};
+  }
+  elements.banisteriopsis_caapi.reactions.knife = {
+    elem1: 'caapi_vine',
+    chance: 0.25
+  };
+
+  elements.caapi_vine = {
+    color: ['#2e7d32', '#1b5e20'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 650,
+    tempHigh: 190,
+    stateHigh: 'ash',
+    burn: 62,
+    burnTime: 240,
+    reactions: {
+      water: { elem1: 'ayahuasca_brew', elem2: null, chance: 0.1, temp1: 80 }
+    },
+    desc: 'Caapi vine - contains harmaline, MAOI for ayahuasca'
+  };
+
+  elements.ayahuasca_brew = {
+    color: ['#8d6e63', '#6d4c41'],
+    behavior: LIQ,
+    viscosity: 1500,
+    category: 'research_compounds',
+    state: 'liquid',
+    density: 1020,
+    tempHigh: 100,
+    stateHigh: 'steam',
+    desc: 'Ayahuasca brew - DMT + MAOI combination'
   };
 
   // Cannabis flower extraction
