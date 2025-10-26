@@ -658,6 +658,9 @@
             stateHigh: 'fentanyl_smoke',
             tempLow: -25,
             stateLow: 'frozen_fentanyl',
+            reactions: {
+                carfentanil_precursor: { elem1: 'carfentanil', elem2: null, chance: 0.1, temp1: 100 }
+            },
             desc: 'Fentanyl citrate - extremely potent, 50-100x morphine'
         },
         carfentanil: {
@@ -787,6 +790,9 @@
             stateHigh: 'steam',
             tempLow: -15,
             stateLow: 'frozen_ghb',
+            reactions: {
+                heat: { elem1: 'gbl', elem2: null, chance: 0.3, temp1: 150 }
+            },
             desc: 'GHB - clear salty liquid, CNS depressant'
         },
         gbl: {
@@ -799,23 +805,11 @@
             stateHigh: 'gbl_vapor',
             tempLow: -44,
             stateLow: 'frozen_gbl',
+            reactions: {
+                sodium_hydroxide: { elem1: 'ghb', elem2: null, chance: 0.25, temp1: 80 }
+            },
             desc: 'GBL - oily liquid, converts to GHB in body'
         },
         bho: {
             sched: 'I',
-            colors: ['#827717', '#9e9d24', '#afb42b', '#c0ca33'],
-            density: 920,
-            liquid: true,
-            viscosity: 8000,
-            tempHigh: 157,
-            stateHigh: 'thc_vapor',
-            tempLow: -20,
-            stateLow: 'frozen_bho',
-            desc: 'Butane hash oil - amber honey-like, extremely sticky'
-        },
-        bubble_hash: {
-            sched: 'I',
-            colors: ['#d7ccc8', '#bcaaa4', '#efebe9', '#c5b8b3'],
-            density: 1050,
-            tempHigh: 157,
-           
+            colors: ['#827717', '#9e9d24', '#afb42b', '#c0ca
