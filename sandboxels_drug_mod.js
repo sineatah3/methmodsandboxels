@@ -13,9 +13,7 @@
     if (typeof window !== 'undefined') {
         window.addEventListener('load', () => {
             alert(
-                'CHEMRESEARCH_V2 ENHANCED – EDUCATIONAL MOD\n' +
-                'Simulates real-world chemistry including controlled substances.\n' +
-                'No real-world instructions are provided. Use responsibly.'
+                'Please dont use this stuff in real life i do not condone using drugs.'
             );
         });
     }
