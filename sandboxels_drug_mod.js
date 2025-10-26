@@ -10,7 +10,7 @@
   // --------------------------------------------------------------------------
   // 0.  ON-LOAD DISCLAIMER
   // --------------------------------------------------------------------------
-  i (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
       alert(
         'CHEMRESEARCH_V2 ENHANCED – EDUCATIONAL MOD\n' +
