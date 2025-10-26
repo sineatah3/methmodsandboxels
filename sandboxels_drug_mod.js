@@ -1532,27 +1532,45 @@
   }
 
   // --------------------------------------------------------------------------
-  // 13. PLANT EXTRACTION REACTIONS
+  // 13. PLANT EXTRACTION REACTIONS & TOOLS
   // --------------------------------------------------------------------------
   
-  // Opium latex from poppies
+  // Create knife tool for plant scoring/harvesting
+  if (!elements.knife) {
+    elements.knife = {
+      color: '#9e9e9e',
+      behavior: behaviors.WALL,
+      category: 'tools',
+      state: 'solid',
+      density: 7850,
+      conduct: 0.9,
+      hardness: 0.95,
+      breakInto: 'metal_scrap',
+      forceSaveColor: true,
+      desc: 'Knife tool - Score poppies for latex, harvest leaves'
+    };
+  }
+
+  // Opium latex from poppies (scoring with knife)
   if (!elements.papaver_somniferum.reactions) {
     elements.papaver_somniferum.reactions = {};
   }
   elements.papaver_somniferum.reactions.knife = { 
     elem1: 'opium_latex', 
-    elem2: null, 
-    chance: 0.15 
+    elem2: 'papaver_somniferum',
+    chance: 0.2,
+    func: true
   };
 
-  // Coca leaves from coca plants
+  // Coca leaves from coca plants (harvesting)
   if (!elements.coca_boliviana.reactions) {
     elements.coca_boliviana.reactions = {};
   }
   elements.coca_boliviana.reactions.knife = { 
     elem1: 'coca_leaves', 
-    elem2: null, 
-    chance: 0.2 
+    elem2: 'coca_boliviana',
+    chance: 0.25,
+    func: true
   };
   
   if (!elements.coca_colombiana.reactions) {
@@ -1560,8 +1578,133 @@
   }
   elements.coca_colombiana.reactions.knife = { 
     elem1: 'coca_leaves', 
-    elem2: null, 
-    chance: 0.2 
+    elem2: 'coca_colombiana',
+    chance: 0.25,
+    func: true
+  };
+
+  // Cannabis flower harvesting
+  if (!elements.cannabis_sativa.reactions) {
+    elements.cannabis_sativa.reactions = {};
+  }
+  elements.cannabis_sativa.reactions.knife = {
+    elem1: 'cannabis_flower',
+    elem2: 'cannabis_sativa',
+    chance: 0.3,
+    func: true
+  };
+
+  if (!elements.cannabis_indica.reactions) {
+    elements.cannabis_indica.reactions = {};
+  }
+  elements.cannabis_indica.reactions.knife = {
+    elem1: 'cannabis_flower',
+    elem2: 'cannabis_indica',
+    chance: 0.3,
+    func: true
+  };
+
+  if (!elements.cannabis_ruderalis.reactions) {
+    elements.cannabis_ruderalis.reactions = {};
+  }
+  elements.cannabis_ruderalis.reactions.knife = {
+    elem1: 'cannabis_flower',
+    elem2: 'cannabis_ruderalis',
+    chance: 0.3,
+    func: true
+  };
+
+  // Kratom leaf harvesting
+  if (!elements.kratom.reactions) {
+    elements.kratom.reactions = {};
+  }
+  elements.kratom.reactions.knife = {
+    elem1: 'kratom_leaves',
+    elem2: 'kratom',
+    chance: 0.25,
+    func: true
+  };
+
+  elements.kratom_leaves = {
+    color: ['#2e7d32', '#33691e'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 600,
+    tempHigh: 180,
+    stateHigh: 'ash',
+    burn: 65,
+    burnTime: 200,
+    desc: 'Kratom leaves - contains mitragynine'
+  };
+
+  // Khat leaf harvesting
+  if (!elements.khat.reactions) {
+    elements.khat.reactions = {};
+  }
+  elements.khat.reactions.knife = {
+    elem1: 'khat_leaves',
+    elem2: 'khat',
+    chance: 0.25,
+    func: true
+  };
+
+  elements.khat_leaves = {
+    color: ['#558b2f', '#689f38'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 600,
+    tempHigh: 175,
+    stateHigh: 'ash',
+    burn: 63,
+    burnTime: 210,
+    desc: 'Khat leaves - contains cathinone, must be fresh'
+  };
+
+  // Salvia leaf harvesting
+  if (!elements.salvia_divinorum.reactions) {
+    elements.salvia_divinorum.reactions = {};
+  }
+  elements.salvia_divinorum.reactions.knife = {
+    elem1: 'salvia_leaves',
+    elem2: 'salvia_divinorum',
+    chance: 0.25,
+    func: true
+  };
+
+  elements.salvia_leaves = {
+    color: ['#2e7d32', '#1b5e20'],
+    behavior: PW,
+    category: 'botanicals',
+    state: 'solid',
+    density: 600,
+    tempHigh: 240,
+    stateHigh: ['smoke', 'salvinorin_vapor'],
+    burn: 60,
+    burnTime: 180,
+    desc: 'Salvia leaves - contains salvinorin A, smokable'
+  };
+
+  elements.salvinorin_vapor = {
+    color: ['#c8e6c9', '#a5d6a7'],
+    behavior: GAS,
+    tempLow: 230,
+    stateLow: 'salvinorin_a',
+    state: 'gas',
+    density: 1.2,
+    desc: 'Salvinorin A vapor - extremely potent'
+  };
+
+  elements.salvinorin_a = {
+    color: ['#e8f5e9', '#f1f8e9'],
+    behavior: PW,
+    category: 'research_compounds',
+    state: 'solid',
+    density: 1100,
+    tempHigh: 240,
+    stateHigh: 'salvinorin_vapor',
+    desc: 'Salvinorin A - most potent natural psychedelic'
   };
 
   // Cannabis flower extraction
