@@ -1535,36 +1535,37 @@
   // 13. KNIFE TOOL (like smash, shock, mix tools)
   // --------------------------------------------------------------------------
   
-  // Register knife as a proper tool
-  if (typeof window !== 'undefined' && window.tools) {
-    window.tools.knife = {
-      name: "Knife",
-      description: "Score poppies, harvest leaves, cut plants",
-      cursor: "crosshair",
-      action: function(pixel) {
-        if (!pixel || !pixel.element) return;
-        
-        const reactions = elements[pixel.element].reactions;
-        if (reactions && reactions.knife) {
-          const reaction = reactions.knife;
-          if (Math.random() < (reaction.chance || 0.2)) {
-            // Create the product
-            if (reaction.elem1) {
-              changePixel(pixel, reaction.elem1);
+  // Create knife element as a placeable tool
+  elements.knife = {
+    color: '#c0c0c0',
+    behavior: behaviors.WALL,
+    category: 'tools',
+    state: 'solid',
+    density: 7850,
+    hardness: 0.9,
+    conduct: 0.85,
+    tool: function(pixel) {
+      // When knife touches a plant, try to harvest it
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          const x = pixel.x + dx;
+          const y = pixel.y + dy;
+          if (!isEmpty(x, y, true)) {
+            const neighbor = pixelMap[x][y];
+            const neighborElement = neighbor.element;
+            
+            if (elements[neighborElement].reactions && elements[neighborElement].reactions.knife) {
+              const reaction = elements[neighborElement].reactions.knife;
+              if (Math.random() < (reaction.chance || 0.2)) {
+                changePixel(neighbor, reaction.elem1);
+              }
             }
           }
         }
       }
-    };
-  }
-
-  // Add knife to behaviors if it doesn't exist
-  if (!behaviors.KNIFE) {
-    behaviors.KNIFE = function(pixel) {
-      // Knife tool behavior handled by tool system
-      return;
-    };
-  }
+    },
+    desc: 'Knife tool - Place next to plants to harvest. Scores poppies for opium latex, harvests coca leaves, cuts cannabis flowers'
+  };
 
   // --------------------------------------------------------------------------
   // 14. PLANT EXTRACTION REACTIONS (for knife tool)
