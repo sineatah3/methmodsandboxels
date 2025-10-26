@@ -1532,34 +1532,51 @@
   }
 
   // --------------------------------------------------------------------------
-  // 13. PLANT EXTRACTION REACTIONS & TOOLS
+  // 13. KNIFE TOOL (like smash, shock, mix tools)
   // --------------------------------------------------------------------------
   
-  // Create knife tool for plant scoring/harvesting
-  if (!elements.knife) {
-    elements.knife = {
-      color: '#9e9e9e',
-      behavior: behaviors.WALL,
-      category: 'tools',
-      state: 'solid',
-      density: 7850,
-      conduct: 0.9,
-      hardness: 0.95,
-      breakInto: 'metal_scrap',
-      forceSaveColor: true,
-      desc: 'Knife tool - Score poppies for latex, harvest leaves'
+  // Register knife as a proper tool
+  if (typeof window !== 'undefined' && window.tools) {
+    window.tools.knife = {
+      name: "Knife",
+      description: "Score poppies, harvest leaves, cut plants",
+      cursor: "crosshair",
+      action: function(pixel) {
+        if (!pixel || !pixel.element) return;
+        
+        const reactions = elements[pixel.element].reactions;
+        if (reactions && reactions.knife) {
+          const reaction = reactions.knife;
+          if (Math.random() < (reaction.chance || 0.2)) {
+            // Create the product
+            if (reaction.elem1) {
+              changePixel(pixel, reaction.elem1);
+            }
+          }
+        }
+      }
     };
   }
 
+  // Add knife to behaviors if it doesn't exist
+  if (!behaviors.KNIFE) {
+    behaviors.KNIFE = function(pixel) {
+      // Knife tool behavior handled by tool system
+      return;
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // 14. PLANT EXTRACTION REACTIONS (for knife tool)
+  // --------------------------------------------------------------------------
+  
   // Opium latex from poppies (scoring with knife)
   if (!elements.papaver_somniferum.reactions) {
     elements.papaver_somniferum.reactions = {};
   }
   elements.papaver_somniferum.reactions.knife = { 
-    elem1: 'opium_latex', 
-    elem2: 'papaver_somniferum',
-    chance: 0.2,
-    func: true
+    elem1: 'opium_latex',
+    chance: 0.2
   };
 
   // Coca leaves from coca plants (harvesting)
@@ -1567,20 +1584,16 @@
     elements.coca_boliviana.reactions = {};
   }
   elements.coca_boliviana.reactions.knife = { 
-    elem1: 'coca_leaves', 
-    elem2: 'coca_boliviana',
-    chance: 0.25,
-    func: true
+    elem1: 'coca_leaves',
+    chance: 0.25
   };
   
   if (!elements.coca_colombiana.reactions) {
     elements.coca_colombiana.reactions = {};
   }
   elements.coca_colombiana.reactions.knife = { 
-    elem1: 'coca_leaves', 
-    elem2: 'coca_colombiana',
-    chance: 0.25,
-    func: true
+    elem1: 'coca_leaves',
+    chance: 0.25
   };
 
   // Cannabis flower harvesting
@@ -1589,9 +1602,7 @@
   }
   elements.cannabis_sativa.reactions.knife = {
     elem1: 'cannabis_flower',
-    elem2: 'cannabis_sativa',
-    chance: 0.3,
-    func: true
+    chance: 0.3
   };
 
   if (!elements.cannabis_indica.reactions) {
@@ -1599,9 +1610,7 @@
   }
   elements.cannabis_indica.reactions.knife = {
     elem1: 'cannabis_flower',
-    elem2: 'cannabis_indica',
-    chance: 0.3,
-    func: true
+    chance: 0.3
   };
 
   if (!elements.cannabis_ruderalis.reactions) {
@@ -1609,9 +1618,7 @@
   }
   elements.cannabis_ruderalis.reactions.knife = {
     elem1: 'cannabis_flower',
-    elem2: 'cannabis_ruderalis',
-    chance: 0.3,
-    func: true
+    chance: 0.3
   };
 
   // Kratom leaf harvesting
@@ -1620,9 +1627,7 @@
   }
   elements.kratom.reactions.knife = {
     elem1: 'kratom_leaves',
-    elem2: 'kratom',
-    chance: 0.25,
-    func: true
+    chance: 0.25
   };
 
   elements.kratom_leaves = {
@@ -1644,9 +1649,7 @@
   }
   elements.khat.reactions.knife = {
     elem1: 'khat_leaves',
-    elem2: 'khat',
-    chance: 0.25,
-    func: true
+    chance: 0.25
   };
 
   elements.khat_leaves = {
@@ -1668,9 +1671,7 @@
   }
   elements.salvia_divinorum.reactions.knife = {
     elem1: 'salvia_leaves',
-    elem2: 'salvia_divinorum',
-    chance: 0.25,
-    func: true
+    chance: 0.25
   };
 
   elements.salvia_leaves = {
