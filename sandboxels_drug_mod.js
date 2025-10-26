@@ -150,12 +150,12 @@
     viscosity: 2500,
     category: 'raw_alkaloids',
     tempHigh: 120,
-    stateHigh: 'morphine_vapor',
+    stateHigh: 'smoke',
     state: 'liquid',
     density: 1350,
     reactions: {
-      acetic_anhydride: { elem1: 'heroin_base', chance: 0.3 },
-      lime: { elem1: 'morphine_base', chance: 0.25 }
+      acetic_anhydride: { elem1: 'heroin_base', elem2: null, chance: 0.3 },
+      lime: { elem1: 'morphine_base', elem2: null, chance: 0.25 }
     },
     desc: 'Raw opium latex - deep purple-brown sap'
   };
@@ -177,8 +177,8 @@
     state: 'solid',
     density: 1100,
     reactions: {
-      gasoline: { elem1: 'coca_paste', chance: 0.2 },
-      kerosene: { elem1: 'coca_paste', chance: 0.2 }
+      gasoline: { elem1: 'coca_paste', elem2: null, chance: 0.2 },
+      kerosene: { elem1: 'coca_paste', elem2: null, chance: 0.2 }
     },
     desc: 'Crude coca alkaloids - off-white powder'
   };
@@ -200,8 +200,8 @@
     state: 'solid',
     density: 950,
     reactions: {
-      butane: { elem1: 'bho', chance: 0.25 },
-      ice_water: { elem1: 'bubble_hash', chance: 0.2 }
+      butane: { elem1: 'bho', elem2: null, chance: 0.25 },
+      ice_water: { elem1: 'bubble_hash', elem2: null, chance: 0.2 }
     },
     desc: 'Cannabis trichomes - crystalline kief'
   };
@@ -581,10 +581,9 @@
 
   // Cocaine + water + baking soda → slurry
   elements.cocaine.reactions = {
-    ...elements.cocaine.reactions,
     water: {
-      elem1: null,
-      elem2: 'cocaine_solution',
+      elem1: 'cocaine_solution',
+      elem2: null,
       chance: 0.1
     }
   };
@@ -621,10 +620,9 @@
   
   // Methamphetamine synthesis routes
   elements.pseudoephedrine.reactions = {
-    ...elements.pseudoephedrine.reactions,
     red_phosphorus: {
-      elem1: null,
-      elem2: 'meth_intermediate',
+      elem1: 'meth_intermediate',
+      elem2: null,
       chance: 0.15
     }
   };
@@ -637,15 +635,14 @@
     state: 'liquid',
     density: 980,
     reactions: {
-      hydrochloric_acid: { elem1: 'methamphetamine', chance: 0.3 }
+      hydrochloric_acid: { elem1: 'methamphetamine', elem2: null, chance: 0.3 }
     },
     desc: 'Methamphetamine freebase intermediate'
   };
 
   // MDMA synthesis
   elements.safrole.reactions = {
-    ...elements.safrole.reactions,
-    isosafrole: { elem1: 'mdma_intermediate', chance: 0.2 }
+    isosafrole: { elem1: 'mdma_intermediate', elem2: null, chance: 0.2 }
   };
 
   elements.mdma_intermediate = {
@@ -656,25 +653,24 @@
     state: 'liquid',
     density: 1040,
     reactions: {
-      methylamine: { elem1: 'mdma', chance: 0.25 }
+      methylamine: { elem1: 'mdma', elem2: null, chance: 0.25 }
     },
     desc: 'MDP2P intermediate for MDMA'
   };
 
   // Heroin synthesis
   elements.morphine_base.reactions = {
-    ...elements.morphine_base.reactions,
-    acetic_anhydride: { elem1: 'heroin_base', chance: 0.3, temp2: 85 }
+    acetic_anhydride: { elem1: 'heroin_base', elem2: null, chance: 0.3 }
   };
 
   elements.heroin_base.reactions = {
-    hydrochloric_acid: { elem1: 'heroin', chance: 0.25 }
+    hydrochloric_acid: { elem1: 'heroin', elem2: null, chance: 0.25 }
   };
 
   // Cocaine refinement
   elements.coca_paste.reactions = {
-    ...elements.coca_paste.reactions,
-    sulfuric_acid: { elem1: 'cocaine_sulfate', chance: 0.2 }
+    sulfuric_acid: { elem1: 'cocaine_sulfate', elem2: null, chance: 0.2 },
+    potassium_permanganate: { elem1: 'cocaine_sulfate', elem2: null, chance: 0.25 }
   };
 
   elements.cocaine_sulfate = {
@@ -684,21 +680,19 @@
     state: 'solid',
     density: 1180,
     reactions: {
-      sodium_hydroxide: { elem1: 'cocaine', chance: 0.25 }
+      sodium_hydroxide: { elem1: 'cocaine', elem2: null, chance: 0.25 }
     },
     desc: 'Cocaine sulfate intermediate'
   };
 
   // LSD synthesis
   elements.lysergic_acid.reactions = {
-    ...elements.lysergic_acid.reactions,
-    diethylamine: { elem1: 'lsd', chance: 0.15 }
+    diethylamine: { elem1: 'lsd', elem2: null, chance: 0.15 }
   };
 
   // Psilocybin extraction
   elements.psilocybin.reactions = {
-    ...elements.psilocybin.reactions,
-    lemon_juice: { elem1: 'psilocin', chance: 0.2 }
+    lemon_juice: { elem1: 'psilocin', elem2: null, chance: 0.2 }
   };
 
   // --------------------------------------------------------------------------
@@ -1086,20 +1080,21 @@
   // --------------------------------------------------------------------------
   
   // Opium latex extraction from poppies
-  elements.papaver_somniferum.reactions = {
-    ...elements.papaver_somniferum.reactions,
-    knife: { elem1: 'opium_latex', chance: 0.15 }
-  };
+  if (!elements.papaver_somniferum.reactions) {
+    elements.papaver_somniferum.reactions = {};
+  }
+  elements.papaver_somniferum.reactions.knife = { elem1: 'opium_latex', elem2: null, chance: 0.15 };
 
   // Coca leaf crushing
-  elements.coca_boliviana.reactions = {
-    ...elements.coca_boliviana.reactions,
-    water: { elem1: 'coca_leaves', chance: 0.1 }
-  };
-  elements.coca_colombiana.reactions = {
-    ...elements.coca_colombiana.reactions,
-    water: { elem1: 'coca_leaves', chance: 0.1 }
-  };
+  if (!elements.coca_boliviana.reactions) {
+    elements.coca_boliviana.reactions = {};
+  }
+  elements.coca_boliviana.reactions.water = { elem1: 'coca_leaves', elem2: null, chance: 0.1 };
+  
+  if (!elements.coca_colombiana.reactions) {
+    elements.coca_colombiana.reactions = {};
+  }
+  elements.coca_colombiana.reactions.water = { elem1: 'coca_leaves', elem2: null, chance: 0.1 };
 
   // Cannabis extraction improvements
   elements.cannabis_flower.reactions = {
@@ -1107,11 +1102,7 @@
     ice_water: { elem1: 'bubble_hash', elem2: 'plant_matter', chance: 0.15 }
   };
 
-  // Potassium permanganate oxidation for cocaine
-  elements.coca_paste.reactions.potassium_permanganate = {
-    elem1: 'cocaine_sulfate',
-    chance: 0.25
-  };
+  // Potassium permanganate oxidation for cocaine (already covered above in coca_paste.reactions)
 
   // --------------------------------------------------------------------------
   // 12. DEBUG AND COMPLETION
