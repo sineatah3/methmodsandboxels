@@ -30,7 +30,7 @@
     const GAS = behaviors.GAS;
 
     // --------------------------------------------------------------------------
-    // 2. FIX MISSING BASE ELEMENTS FIRST
+    // 2. FIX MISSING BASE ELEMENTS FIRST - PREVENT UNKNOWN ERRORS
     // --------------------------------------------------------------------------
     
     // Ensure all base game elements exist to prevent "unknown element" errors
@@ -45,27 +45,38 @@
             tempHigh: 200,
             stateHigh: 'ash'
         },
-        wet_soil: {
-            color: ['#8d6e63', '#795548'],
+        soil: {
+            color: ['#8d6e63', '#795548', '#6d4c41'],
             behavior: PW,
             category: 'land',
             state: 'solid',
-            density: 1200
+            density: 1200,
+            desc: 'Soil - basic planting medium'
+        },
+        wet_soil: {
+            color: ['#7b5e57', '#6d4c41', '#5d4037'],
+            behavior: PW,
+            category: 'land',
+            state: 'solid',
+            density: 1400,
+            desc: 'Wet soil - moist planting medium'
         },
         mud: {
-            color: ['#795548', '#6d4c41'],
+            color: ['#6d4c41', '#5d4037', '#4e342e'],
             behavior: LIQ,
             category: 'land',
             state: 'liquid',
-            density: 1500,
-            viscosity: 3000
+            density: 1600,
+            viscosity: 5000,
+            desc: 'Mud - water-saturated soil'
         },
         fertilizer: {
-            color: ['#fff9c4', '#ffecb3'],
+            color: ['#fff9c4', '#ffecb3', '#ffe082'],
             behavior: PW,
             category: 'tools',
             state: 'solid',
-            density: 900
+            density: 900,
+            desc: 'Fertilizer - promotes plant growth'
         },
         baking_soda: {
             color: ['#ffffff', '#f5f5f5'],
@@ -365,7 +376,7 @@
             desc: cfg.desc + ' - Research use only.'
         };
 
-        // Seeds with realistic properties - need moisture and warmth to grow
+        // Seeds with FIXED reactions using existing elements only
         elements[cfg.seed] = {
             color: ['#8d6e63', '#795548', '#a1887f', '#6d4c41'],
             behavior: PW,
@@ -377,11 +388,13 @@
             state: 'solid',
             density: 1100,
             reactions: {
-                wet_soil: { elem1: plant, elem2: null, chance: 0.03, tempMin: 15 },
-                mud: { elem1: plant, elem2: null, chance: 0.02, tempMin: 15 },
-                fertilizer: { elem1: plant, elem2: null, chance: 0.05, tempMin: 15 }
+                soil: { elem1: plant, elem2: null, chance: 0.04, tempMin: 15 },
+                wet_soil: { elem1: plant, elem2: null, chance: 0.06, tempMin: 15 },
+                mud: { elem1: plant, elem2: null, chance: 0.08, tempMin: 15 },
+                water: { elem1: plant, elem2: null, chance: 0.03, tempMin: 15 },
+                fertilizer: { elem1: plant, elem2: null, chance: 0.10, tempMin: 15 }
             },
-            desc: 'Seed/spore - Needs wet soil and warmth to grow'
+            desc: 'Seed/spore - Needs soil and warmth (15°C+) to grow'
         };
     });
 
@@ -1389,79 +1402,7 @@
     });
 
     // --------------------------------------------------------------------------
-    // 12. ADD MISSING REACTIONS TO MAKE EVERYTHING CRAFTABLE
-    // --------------------------------------------------------------------------
-
-    // Add reactions to base game elements that can create our mod elements
-    if (elements.water) {
-        elements.water.reactions = {
-            ...elements.water.reactions,
-            cocaine: { elem1: 'cocaine_solution', elem2: null, chance: 0.3 },
-            methamphetamine: { elem1: 'meth_solution', elem2: null, chance: 0.3 },
-            mdma: { elem1: 'mdma_solution', elem2: null, chance: 0.3 },
-            heroin_base: { elem1: 'heroin_solution', elem2: null, chance: 0.3 },
-            opium_latex: { elem1: 'opium_solution', elem2: null, chance: 0.3 },
-            psilocybin: { elem1: 'psilocybin_tea', elem2: null, chance: 0.25 },
-            mescaline: { elem1: 'mescaline_tea', elem2: null, chance: 0.25 },
-            lsa: { elem1: 'lsa_solution', elem2: null, chance: 0.25 },
-            nicotine: { elem1: 'nicotine_solution', elem2: null, chance: 0.25 }
-        };
-    }
-
-    if (elements.dirt) {
-        elements.dirt.reactions = {
-            ...elements.dirt.reactions,
-            seed_sativa: { elem1: 'cannabis_sativa', elem2: null, chance: 0.05 },
-            seed_indica: { elem1: 'cannabis_indica', elem2: null, chance: 0.05 },
-            seed_ruderalis: { elem1: 'cannabis_ruderalis', elem2: null, chance: 0.05 },
-            seed_poppy: { elem1: 'papaver_somniferum', elem2: null, chance: 0.05 },
-            seed_coca_bol: { elem1: 'coca_boliviana', elem2: null, chance: 0.05 },
-            seed_coca_col: { elem1: 'coca_colombiana', elem2: null, chance: 0.05 },
-            seed_ephedra: { elem1: 'ephedra_sinica', elem2: null, chance: 0.05 },
-            seed_khat: { elem1: 'khat', elem2: null, chance: 0.05 },
-            seed_kratom: { elem1: 'kratom', elem2: null, chance: 0.05 },
-            spore_cubensis: { elem1: 'psilocybe_cubensis', elem2: null, chance: 0.05 },
-            seed_iboga: { elem1: 'iboga', elem2: null, chance: 0.05 },
-            seed_salvia: { elem1: 'salvia_divinorum', elem2: null, chance: 0.05 },
-            seed_caapi: { elem1: 'banisteriopsis_caapi', elem2: null, chance: 0.05 },
-            seed_peyote: { elem1: 'peyote', elem2: null, chance: 0.05 },
-            seed_morning_glory: { elem1: 'morning_glory', elem2: null, chance: 0.05 },
-            seed_tobacco: { elem1: 'tobacco', elem2: null, chance: 0.05 },
-            seed_coffee: { elem1: 'coffee', elem2: null, chance: 0.05 },
-            seed_psychotria: { elem1: 'psychotria', elem2: null, chance: 0.05 }
-        };
-    }
-
-    // Add reactions to create main compounds from intermediates
-    elements.cocaine_base.reactions = {
-        ...elements.cocaine_base.reactions,
-        baking_soda: { elem1: 'crack', elem2: null, chance: 0.3, tempMin: 85 }
-    };
-
-    elements.crack_slurry.reactions = {
-        ...elements.crack_slurry.reactions,
-        heat: { elem1: 'crack', elem2: 'steam', chance: 0.4, tempMin: 85 }
-    };
-
-    // Make sure all plants can be processed into their products
-    elements.cannabis_sativa.reactions = {
-        harvest: { elem1: 'cannabis_flower', elem2: null, chance: 0.8 }
-    };
-
-    elements.coca_boliviana.reactions = {
-        harvest: { elem1: 'coca_leaves', elem2: null, chance: 0.8 }
-    };
-
-    elements.coca_colombiana.reactions = {
-        harvest: { elem1: 'coca_leaves', elem2: null, chance: 0.8 }
-    };
-
-    elements.papaver_somniferum.reactions = {
-        harvest: { elem1: 'opium_latex', elem2: null, chance: 0.7 }
-    };
-
-    // --------------------------------------------------------------------------
-    // 13. COMPLETE UNIVERSAL PRECURSOR SYSTEM
+    // 12. COMPLETE UNIVERSAL PRECURSOR SYSTEM
     // --------------------------------------------------------------------------
 
     // Create universal precursor if it doesn't exist
@@ -1523,7 +1464,7 @@
     }
 
     // --------------------------------------------------------------------------
-    // 14. ADD BASE GAME ELEMENTS FOR REACTIONS
+    // 13. ADD BASE GAME ELEMENTS FOR REACTIONS
     // --------------------------------------------------------------------------
     
     // Add common base game elements if they don't exist
@@ -1606,11 +1547,13 @@
     });
 
     // --------------------------------------------------------------------------
-    // 15. COMPLETION & DEBUG
+    // 14. COMPLETION & DEBUG
     // --------------------------------------------------------------------------
-    console.log('✓ ChemResearch v2 Enhanced - COMPLETE & CRAFTABLE VERSION loaded');
-    console.log('✓ Fixed all missing base elements to prevent "unknown element" errors');
-    console.log('✓ Added 18 botanical plants with seeds');
+    console.log('✓ ChemResearch v2 Enhanced - COMPLETE & FIXED VERSION loaded');
+    console.log('✓ FIXED: All seed growth systems now work without errors');
+    console.log('✓ Added essential growth elements: soil, water, wet_soil, mud, fertilizer');
+    console.log('✓ Fixed ALL seed reactions to use existing elements only');
+    console.log('✓ Added 18 botanical plants with working seeds');
     console.log('✓ Added 8 precursor chemicals');
     console.log('✓ Added 12 research compounds');
     console.log('✓ Added 15 intermediate compounds');
@@ -1621,6 +1564,8 @@
     console.log('✓ Added 25+ missing reaction elements');
     console.log('✓ Made EVERY element craftable through reactions');
     console.log('✓ Universal precursor can create all 100+ elements');
+    console.log('✓ Cannabis seeds now grow with: soil, wet_soil, mud, water, or fertilizer');
+    console.log('✓ Growth temperatures: 15°C+ for all plants');
     console.log('✓ Total research elements: ' + Object.keys(elements).filter(k =>
         elements[k].category && (
             elements[k].category.includes('research_compounds') ||
